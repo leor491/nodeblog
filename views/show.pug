@@ -5,13 +5,13 @@ block content
     h1
      =post.title
     p.meta Posted in 
-     a(href='/categories/show/#{post.category}') #{post.category}
+     a(href=`/categories/show/${post.category}`) #{post.category}
      |  by #{post.author} on #{moment(post.date).format("MM-DD-YYYY")}
-    img(src='/uploads/#{post.mainimage}')
+    img(src=`/uploads/${post.mainimage}`)
     !=post.body
     br
-    hr
     if post.comments
+     hr
      h3 Comments
      each comment, i in post.comments
       .comment
@@ -24,7 +24,7 @@ block content
     each error, i in errors
      li.alert.alert-danger #{error.msg}
   form.comment-form(method='post', action='/posts/add_comment')
-   input(name='postid', type='hidden', value="#{post._id}")
+   input(name='postid', type='hidden', value=`${post._id}`)
    .form-group
     label Name
     input.form-control(type='text', name='name')
