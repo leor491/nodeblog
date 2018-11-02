@@ -21,16 +21,21 @@ router.post('/add', function(req, res, next) {
 	var errors = req.validationErrors();
 
 	if(errors){
-		res.render('addcategory', {
-			errors
-		});
+        console.error(JSON.stringify(errors));
+        //todo
+        req.flash('errors', 'Validation Error');
+        res.location('/categories/add');
+        res.redirect('/categories/add');
 	} else {
 		var categories = db.get('categories');
 		categories.insert({
 			name
 		}, function(err, post){
 			if(err){
-				res.send('err');
+				console.error(err);
+                req.flash('errors', 'Category Not Added.');
+				res.location('/categories/add');
+				res.redirect('/categories/add');
 			} else {
 				req.flash('success', 'Category Added');
 				res.location('/');

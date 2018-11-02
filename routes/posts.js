@@ -24,8 +24,7 @@ router.get('/add', function(req, res, next) {
 router.post('/add', upload.single('mainimg'), function(req, res, next) {
 	var {title, category, body, author} = req.body;
 	var date = new Date();
-
-	//old way?
+    
 	var mainimage = req.file ? req.file.filename : 'noimage.jpg';
 
 	req.checkBody('title', 'Title field is required').notEmpty();
@@ -36,9 +35,11 @@ router.post('/add', upload.single('mainimg'), function(req, res, next) {
 	var errors = req.validationErrors();
 
 	if(errors){
-		res.render('addpost', {
-			errors
-		});
+        console.error(JSON.stringify(errors));
+        //todo
+        req.flash('errors', '1 or more validation errors.');
+        res.location('/posts/add');
+        res.redirect('/posts/add');
 	} else {
 		var posts = db.get('posts');
 		posts.insert({
@@ -50,7 +51,9 @@ router.post('/add', upload.single('mainimg'), function(req, res, next) {
 			mainimage
 		}, function(err, post){
 			if(err){
-				res.send('err');
+                console.error(JSON.stringify(err));
+				//todo
+                res.end();
 			} else {
 				req.flash('success', 'Post Added');
 				res.location('/');
@@ -74,6 +77,8 @@ router.post('/add_comment', function(req, res, next) {
 	var errors = req.validationErrors();
 
 	if(errors){
+        console.error(JSON.stringify(errors));
+        //todo
         req.flash('errors', '1 or more validation errors.');
         res.location(`/posts/show/${postid}`);
         res.redirect(`/posts/show/${postid}`);
